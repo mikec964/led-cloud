@@ -1,21 +1,21 @@
-struct rgb_t HSLtoRGB(int hue, byte saturation, byte luminance)
+struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
 {
   /* Hue 0–359, Luminance 0-100, Saturation 0-100, returns RGB tuple
    * 
    * Usually use luminance 50, saturation 100
    */
 
-  struct rgb_t rgb;
-  int red, green, blue;
+  struct Rgb rgb;
+  byte red, green, blue;
 
   #ifdef DEBUG_LOG
     Serial.print(F("HSL "));
     Serial.print(hue);
-    Serial.print(", ");
+    Serial.print(F(", "));
     Serial.print(saturation);
-    Serial.print(", ");
+    Serial.print(F(", "));
     Serial.print(luminance);
-    Serial.print(". ");
+    Serial.print(F(". "));
   #endif
 
   // Calc based on luminance = 50
@@ -39,18 +39,18 @@ struct rgb_t HSLtoRGB(int hue, byte saturation, byte luminance)
     blue = 255 - int(255 * (hue - 300) / 60);
   }
 
-  red = luminance_adjust(red, luminance);
-  green = luminance_adjust(green, luminance);
-  blue = luminance_adjust(blue, luminance);
+  red = AdjustLuminance(red, luminance);
+  green = AdjustLuminance(green, luminance);
+  blue = AdjustLuminance(blue, luminance);
 
-  rgb.red = saturation_adjust(red, saturation);
-  rgb.green = saturation_adjust(green, saturation);
-  rgb.blue = saturation_adjust(blue, saturation);
+  rgb.red = AdjustSaturation(red, saturation);
+  rgb.green = AdjustSaturation(green, saturation);
+  rgb.blue = AdjustSaturation(blue, saturation);
  
   return rgb;
 }
 
-int luminance_adjust (int color, int luminance) {
+int AdjustLuminance (int color, byte luminance) {
   /* color = 0-255, luminance = 0-100
    *  
    * If luminance is 50, leave color alone.
@@ -69,20 +69,20 @@ int luminance_adjust (int color, int luminance) {
   adjust = dist * factor; // scale dist by factor
 
   #ifdef DEBUG_LOG
-    Serial.print("factor, dist, adjust: ");
+    Serial.print(F("factor, dist, adjust: "));
     Serial.print(factor);
-    Serial.print(", ");
+    Serial.print(F(", "));
     Serial.print(dist);
-    Serial.print(", ");
+    Serial.print(F(", "));
     Serial.print(adjust);
-    Serial.print(". ");
+    Serial.print(F(". "));
   #endif
   
   color = color + adjust;
   return color;
 }
 
-int saturation_adjust (int color, int saturation) {
+int AdjustSaturation (int color, byte saturation) {
   /* color = 0-255, saturation= 0-100
    *  
    * If saturation is 100, leave color alone.
