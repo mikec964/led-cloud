@@ -3,12 +3,15 @@
 // All LEDs will be the same color; they're not individually addressable
 
 #define COMMON_ANODE
-//#define DEBUG_LOG
+#define DEBUG_LOG
 
 #include "hsl.h"
 
 struct rgb_t rgb;
 int hue = 0;
+byte saturation = 100;
+byte luminance = 50;
+bool once = false;
 
 // AdaFruit Trinket requires pins 4, 1, 0
 const byte RED_PIN = 4;
@@ -30,7 +33,7 @@ void setup() {
 
   // quick connectivity test
   for(i=0; i <= 255; i++) { setLedColor(i, 0, 0); delay(24); }
-  for(i=0; i <= 256; i++) { setLedColor(0, i, 0); delay(24); }
+  for(i=0; i <= 255; i++) { setLedColor(0, i, 0); delay(24); }
   for(i=0; i <= 255; i++) { setLedColor(0, 0, i); delay(24); }
   setLedColor(128, 128, 128);
   delay(1000);
@@ -39,20 +42,27 @@ void setup() {
 }
 
 void loop() {
-  rgb = hueWheel(hue);
-  setLedColor(rgb.red, rgb.green, rgb.blue);
-  delay(27); // .027 seconds. 10 seconds per loop around color wheel
-  #ifdef DEBUG_LOG
-    Serial.print(F("Hue: "));
-    Serial.print(hue);
-    Serial.print(": ");
-    Serial.print(rgb.red);
-    Serial.print(", ");
-    Serial.print(rgb.green);
-    Serial.print(", ");
-    Serial.println(rgb.blue);
-  #endif
-  hue = (hue + 1) % 360;
+  if (once == false) {
+    for(hue = 0; hue <= 359; hue = hue + 10) {
+      for(luminance = 0; luminance <= 100; luminance = luminance + 5) {
+        rgb = HSLtoRGB(hue, saturation, luminance);
+        setLedColor(rgb.red, rgb.green, rgb.blue);
+        //delay(27); // .027 seconds. 10 seconds per loop around color wheel
+        #ifdef DEBUG_LOG
+          Serial.print("RGB: ");
+          Serial.print(rgb.red);
+          Serial.print(", ");
+          Serial.print(rgb.green);
+          Serial.print(", ");
+          Serial.print(rgb.blue);
+          Serial.println(". ");
+        #endif  
+      }
+    }
+    once = true;
+  }
+  //hue = (hue + 1) % 360;
+  //luminance = (luminance + 5) % 101;
 }
 
 void setLedColor(int red, int green, int blue)
