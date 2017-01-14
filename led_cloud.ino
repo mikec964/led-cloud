@@ -3,7 +3,7 @@
 // All LEDs will be the same color; they're not individually addressable
 
 #define COMMON_ANODE
-//#define DEBUG_LOG
+#define DEBUG_LOG
 
 #include "hsl.h"
 
@@ -32,36 +32,32 @@ void setup() {
   pinMode(BLUE_PIN, OUTPUT);
 
   // quick connectivity test
-  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(24); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(24); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(24); }
+  SetLedColor(0, 0, 0);
+  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
+  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
+  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
   SetLedColor(128, 128, 128);
   delay(1000);
   SetLedColor(0, 0, 0);
-  delay(1000);
+  delay(500);
 }
 
 void loop() {
   if (once == false) {
-    for(hue = 0; hue <= 359; hue = hue + 20) {
-      for(luminance = 0; luminance <= 100; luminance = luminance + 5) {
-        rgb = HslToRgb(hue, saturation, luminance);
-        SetLedColor(rgb.red, rgb.green, rgb.blue);
-        delay(27); // .027 seconds. 10 seconds per loop around color wheel
-        #ifdef DEBUG_LOG
-          Serial.print("RGB: ");
-          Serial.print(rgb.red);
-          Serial.print(", ");
-          Serial.print(rgb.green);
-          Serial.print(", ");
-          Serial.print(rgb.blue);
-          Serial.println(". ");
-        #endif  
-      }
-    }
-    once = true;
+    rgb = WheelPattern(10);
+    SetLedColor(rgb.red, rgb.green, rgb.blue);
+    
+    #ifdef DEBUG_LOG
+      Serial.print("RGB: ");
+      Serial.print(rgb.red);
+      Serial.print(", ");
+      Serial.print(rgb.green);
+      Serial.print(", ");
+      Serial.print(rgb.blue);
+      Serial.println(". ");
+    #endif  
   }
-  //hue = (hue + 1) % 360;
+  //once = true;
   //luminance = (luminance + 5) % 101;
 }
 

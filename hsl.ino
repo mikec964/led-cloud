@@ -2,21 +2,21 @@ struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
 {
   /* Hue 0–359, Luminance 0-100, Saturation 0-100, returns RGB tuple
    * 
-   * Usually use luminance 50, saturation 100
+   * Usually use saturation 100, luminance 50
    */
 
   struct Rgb rgb;
   byte red, green, blue;
 
-  #ifdef DEBUG_LOG
-    Serial.print(F("HSL "));
-    Serial.print(hue);
-    Serial.print(F(", "));
-    Serial.print(saturation);
-    Serial.print(F(", "));
-    Serial.print(luminance);
-    Serial.print(F(". "));
-  #endif
+//  #ifdef DEBUG_LOG
+//    Serial.print(F("HSL "));
+//    Serial.print(hue);
+//    Serial.print(F(", "));
+//    Serial.print(saturation);
+//    Serial.print(F(", "));
+//    Serial.print(luminance);
+//    Serial.print(F(". "));
+//  #endif
 
   // Calc based on luminance = 50
   if(hue < 60) {
@@ -68,15 +68,15 @@ int AdjustLuminance (int color, byte luminance) {
     dist = color; // How far from 0?
   adjust = dist * factor; // scale dist by factor
 
-  #ifdef DEBUG_LOG
-    Serial.print(F("factor, dist, adjust: "));
-    Serial.print(factor);
-    Serial.print(F(", "));
-    Serial.print(dist);
-    Serial.print(F(", "));
-    Serial.print(adjust);
-    Serial.print(F(". "));
-  #endif
+//  #ifdef DEBUG_LOG
+//    Serial.print(F("factor, dist, adjust: "));
+//    Serial.print(factor);
+//    Serial.print(F(", "));
+//    Serial.print(dist);
+//    Serial.print(F(", "));
+//    Serial.print(adjust);
+//    Serial.print(F(". "));
+//  #endif
   
   color = color + adjust;
   return color;
