@@ -3,7 +3,7 @@
 // All LEDs will be the same color; they're not individually addressable
 
 #define COMMON_ANODE
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 #include "hsl.h"
 
@@ -12,6 +12,7 @@ int hue = 0;
 byte saturation = 100;
 byte luminance = 50;
 bool once = false;
+byte state = 0;
 
 // AdaFruit Trinket requires pins 4, 1, 0
 const byte RED_PIN = 4;

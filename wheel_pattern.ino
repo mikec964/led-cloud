@@ -13,7 +13,7 @@ struct Rgb WheelPattern(int timeForLoop) {
   
   hue = (hue + 1) % 360;
   rgb = HslToRgb(hue, 100, 50);
-  delay(timeForLoop / 360 * 1000); // 360 degrees per loop
+  delay(int(timeForLoop / 360.0 * 1000)); // 360 degrees per loop
   return rgb;
 }
 
