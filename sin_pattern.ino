@@ -15,8 +15,9 @@ struct Rgb SinPattern(int timeForLoop) {
    */
 
   struct Rgb rgb;
-  const byte MAX_LUMINANCE = 70;
+  const byte MAX_LUMINANCE = 75;
   const byte MIN_LUMINANCE = 25;
+  const byte saturation = 100;
 
   if (state == 0) {
     // brightening lum
@@ -30,23 +31,36 @@ struct Rgb SinPattern(int timeForLoop) {
     if ((hue % 40) == 20)
       state = state + 1;
       
-  } else if (state == 3) {
+  } else if (state == 2) {
     // reducing lum
     luminance = luminance - 1;
     if (luminance == MIN_LUMINANCE)
       state = state + 1;
       
-  } else if (state == 4) {
+  } else if (state == 3) {
     // increasing hue at min lum
     hue = hue + 1;
     if ((hue % 40) == 0)
-      state = state + 1;
+      state = 0;
   }
 
   if (hue == 360)
     hue = 0;
-  rgb = HslToRgb(hue, 100, luminance);
-  delay(int(timeForLoop / 360.0 * 1000)); // 360 degrees per loop
+  rgb = HslToRgb(hue, saturation, luminance);
+  #ifdef DEBUG_LOG
+    Serial.print(F("State: "));
+    Serial.print(state);
+    Serial.print(F(". HSL: "));
+    Serial.print(hue);
+    Serial.print(F(", "));
+    Serial.print(saturation);
+    Serial.print(F(", "));
+    Serial.print(luminance);
+    Serial.print(F(". "));
+  #endif
+
+  // A loop is 50 * 18 + 360 steps... 
+  delay(int(timeForLoop / 1260.0 * 1000)); // 360 degrees per loop
   return rgb;
 }
 

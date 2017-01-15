@@ -2,8 +2,13 @@
 
 // All LEDs will be the same color; they're not individually addressable
 
-#define COMMON_ANODE
+// LED strip is NOT common_anode
+// Test LED IS common_anode
+//#define COMMON_ANODE
 //#define DEBUG_LOG
+
+// For Trinket, program with USBtinyISP
+// For Arduino, program with AVR ISP
 
 #include "hsl.h"
 
@@ -45,7 +50,8 @@ void setup() {
 
 void loop() {
   if (once == false) {
-    rgb = WheelPattern(10);
+    //rgb = WheelPattern(60);
+    rgb = SinPattern(126);
     SetLedColor(rgb.red, rgb.green, rgb.blue);
     
     #ifdef DEBUG_LOG
