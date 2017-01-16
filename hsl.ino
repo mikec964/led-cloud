@@ -3,6 +3,9 @@ struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
   /* Hue 0–359, Luminance 0-100, Saturation 0-100, returns RGB tuple
    * 
    * Usually use saturation 100, luminance 50
+   * 
+   * As luminance shifts (by 1), RGB colors shift by about 5 or 6.
+   * This makes increasing brightness look bumpy.
    */
 
   struct Rgb rgb;

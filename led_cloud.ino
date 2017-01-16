@@ -5,24 +5,25 @@
 // LED strip is NOT common_anode
 // Test LED IS common_anode
 //#define COMMON_ANODE
-//#define DEBUG_LOG
+#define DEBUG_LOG
 
 // For Trinket, program with USBtinyISP
 // For Arduino, program with AVR ISP
 
 #include "hsl.h"
+#include "sin_pattern.h"
+#include "wheel_pattern.h"
 
 struct Rgb rgb;
-int hue = 0;
-byte saturation = 100;
-byte luminance = 50;
 bool once = false;
-byte state = 0;
 
 // AdaFruit Trinket requires pins 4, 1, 0
 const byte RED_PIN = 4;
 const byte GREEN_PIN = 1;
 const byte BLUE_PIN = 0;
+
+WheelPattern wheelP(10); // loop time
+//SinPattern sinP(126, 25, 65); // loop time, min luminance, max luminance
 
 void setup() {
   int i;
@@ -50,8 +51,8 @@ void setup() {
 
 void loop() {
   if (once == false) {
-    //rgb = WheelPattern(60);
-    rgb = SinPattern(126);
+    rgb = wheelP.Update();
+    //rgb = sinP.Update();
     SetLedColor(rgb.red, rgb.green, rgb.blue);
     
     #ifdef DEBUG_LOG
@@ -65,7 +66,6 @@ void loop() {
     #endif  
   }
   //once = true;
-  //luminance = (luminance + 5) % 101;
 }
 
 void SetLedColor(int red, int green, int blue)

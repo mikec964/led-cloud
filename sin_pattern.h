@@ -19,3 +19,4 @@ class SinPattern
 };
 
 #endif
+

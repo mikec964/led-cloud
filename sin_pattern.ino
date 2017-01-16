@@ -1,10 +1,12 @@
-struct Rgb SinPattern(int timeForLoop) {
+#include "sin_pattern.h"
+
+SinPattern::SinPattern(int setLoopTime, int setMinLum, int setMaxLum) {
   /* Goes around the color wheel, varies luminance
    *  
    *  Time is seconds to complete a 360 degree circuit
    *  It can be called as often as you'd like
    *  
-   *  Go from dim (25) to bright (70) on hue,
+   *  Go from dim to bright on hue,
    *  increment hue,
    *  go from bright to dim
    *  increment hue
@@ -14,15 +16,23 @@ struct Rgb SinPattern(int timeForLoop) {
    *  If enough time has passed, it returns the next calculated rgb.
    */
 
-  struct Rgb rgb;
-  const byte MAX_LUMINANCE = 75;
-  const byte MIN_LUMINANCE = 25;
-  const byte saturation = 100;
+// what if starting luminance > maxLum??
 
+  // Constructor
+  hue = 300;
+  saturation = 100;
+  minLuminance = setMinLum;
+  maxLuminance = setMaxLum;
+  luminance = minLuminance;
+  loopTime = setLoopTime;
+  state = 0;
+}
+
+Rgb SinPattern::Update() {
   if (state == 0) {
     // brightening lum
     luminance = luminance + 1;
-    if (luminance == MAX_LUMINANCE)
+    if (luminance == maxLuminance)
       state = state + 1;
       
   } else if (state == 1) {
@@ -34,7 +44,7 @@ struct Rgb SinPattern(int timeForLoop) {
   } else if (state == 2) {
     // reducing lum
     luminance = luminance - 1;
-    if (luminance == MIN_LUMINANCE)
+    if (luminance == minLuminance)
       state = state + 1;
       
   } else if (state == 3) {
@@ -60,7 +70,7 @@ struct Rgb SinPattern(int timeForLoop) {
   #endif
 
   // A loop is 50 * 18 + 360 steps... 
-  delay(int(timeForLoop / 1260.0 * 1000)); // 360 degrees per loop
+  delay(int(loopTime / 1260.0 * 1000)); // 360 degrees per loop
   return rgb;
 }
 
