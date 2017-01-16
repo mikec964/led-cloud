@@ -1,11 +1,10 @@
 # To Do
 
 ## Software
-* Objects for patterns
 * No delay() calls
-* square, triangle, and sin patterns
+* triangle, and sine patterns
 * saturation calc
-* 
+* smooth luminance calc
 
 ## Hardware
 * debug LED matches strip color

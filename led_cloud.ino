@@ -11,8 +11,8 @@
 // For Arduino, program with AVR ISP
 
 #include "hsl.h"
-#include "sin_pattern.h"
-#include "wheel_pattern.h"
+#include "square_pattern.h"
+#include "rainbow_pattern.h"
 
 struct Rgb rgb;
 bool once = false;
@@ -22,8 +22,8 @@ const byte RED_PIN = 4;
 const byte GREEN_PIN = 1;
 const byte BLUE_PIN = 0;
 
-WheelPattern wheelP(10); // loop time
-//SinPattern sinP(126, 25, 65); // loop time, min luminance, max luminance
+//RainbowPattern rainbowP(10); // loop time
+SquarePattern squareP(126, 25, 65); // loop time, min luminance, max luminance
 
 void setup() {
   int i;
@@ -51,25 +51,24 @@ void setup() {
 
 void loop() {
   if (once == false) {
-    rgb = wheelP.Update();
-    //rgb = sinP.Update();
+    //rgb = rainbowP.Update();
+    rgb = squareP.Update();
     SetLedColor(rgb.red, rgb.green, rgb.blue);
-    
-    #ifdef DEBUG_LOG
-      Serial.print("RGB: ");
-      Serial.print(rgb.red);
-      Serial.print(", ");
-      Serial.print(rgb.green);
-      Serial.print(", ");
-      Serial.print(rgb.blue);
-      Serial.println(". ");
-    #endif  
   }
   //once = true;
 }
 
 void SetLedColor(int red, int green, int blue)
 {
+  #ifdef DEBUG_LOG
+    Serial.print("RGB: ");
+    Serial.print(red);
+    Serial.print(", ");
+    Serial.print(green);
+    Serial.print(", ");
+    Serial.print(blue);
+    Serial.println(". ");
+  #endif
   #ifdef COMMON_ANODE
     red = 255 - red;
     green = 255 - green;
@@ -79,5 +78,4 @@ void SetLedColor(int red, int green, int blue)
   analogWrite(GREEN_PIN, green);
   analogWrite(BLUE_PIN, blue);  
 }
-
 
