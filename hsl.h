@@ -8,3 +8,7 @@ struct Rgb {
 };
 
 #endif
+
+// purple 300, 1, 50
+// rebeccapurple 270, 50, 40
+

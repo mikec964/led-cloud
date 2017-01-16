@@ -2,21 +2,28 @@
 
 // All LEDs will be the same color; they're not individually addressable
 
-#define COMMON_ANODE
-//#define DEBUG_LOG
+// LED strip is NOT common_anode
+// Test LED IS common_anode
+//#define COMMON_ANODE
+#define DEBUG_LOG
+
+// For Trinket, program with USBtinyISP
+// For Arduino, program with AVR ISP
 
 #include "hsl.h"
+#include "square_pattern.h"
+#include "rainbow_pattern.h"
 
 struct Rgb rgb;
-int hue = 0;
-byte saturation = 100;
-byte luminance = 50;
 bool once = false;
 
 // AdaFruit Trinket requires pins 4, 1, 0
 const byte RED_PIN = 4;
 const byte GREEN_PIN = 1;
 const byte BLUE_PIN = 0;
+
+//RainbowPattern rainbowP(10); // loop time
+SquarePattern squareP(126, 25, 65); // loop time, min luminance, max luminance
 
 void setup() {
   int i;
@@ -32,41 +39,36 @@ void setup() {
   pinMode(BLUE_PIN, OUTPUT);
 
   // quick connectivity test
-  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(24); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(24); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(24); }
+  SetLedColor(0, 0, 0);
+  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
+  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
+  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
   SetLedColor(128, 128, 128);
   delay(1000);
   SetLedColor(0, 0, 0);
-  delay(1000);
+  delay(500);
 }
 
 void loop() {
   if (once == false) {
-    for(hue = 0; hue <= 359; hue = hue + 20) {
-      for(luminance = 0; luminance <= 100; luminance = luminance + 5) {
-        rgb = HslToRgb(hue, saturation, luminance);
-        SetLedColor(rgb.red, rgb.green, rgb.blue);
-        delay(27); // .027 seconds. 10 seconds per loop around color wheel
-        #ifdef DEBUG_LOG
-          Serial.print("RGB: ");
-          Serial.print(rgb.red);
-          Serial.print(", ");
-          Serial.print(rgb.green);
-          Serial.print(", ");
-          Serial.print(rgb.blue);
-          Serial.println(". ");
-        #endif  
-      }
-    }
-    once = true;
+    //rgb = rainbowP.Update();
+    rgb = squareP.Update();
+    SetLedColor(rgb.red, rgb.green, rgb.blue);
   }
-  //hue = (hue + 1) % 360;
-  //luminance = (luminance + 5) % 101;
+  //once = true;
 }
 
 void SetLedColor(int red, int green, int blue)
 {
+  #ifdef DEBUG_LOG
+    Serial.print("RGB: ");
+    Serial.print(red);
+    Serial.print(", ");
+    Serial.print(green);
+    Serial.print(", ");
+    Serial.print(blue);
+    Serial.println(". ");
+  #endif
   #ifdef COMMON_ANODE
     red = 255 - red;
     green = 255 - green;
@@ -76,5 +78,4 @@ void SetLedColor(int red, int green, int blue)
   analogWrite(GREEN_PIN, green);
   analogWrite(BLUE_PIN, blue);  
 }
-
 
