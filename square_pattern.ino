@@ -1,57 +1,56 @@
 #include "square_pattern.h"
 
-SquarePattern::SquarePattern(int setLoopTime, int setMinLum, int setMaxLum) {
-  /* Concerns:
-   * what if starting lightness > maxLightness??
-   * Lightness increments by 1, but this causes RGB to increment by 4... jaggy.
-   */
-
+SquarePattern::SquarePattern(int setLoopTime, int setMinLightness, int setMaxLightness) {
   // Constructor
   hue = 300;
   saturation = 100;
-  minLightness = setMinLum;
-  maxLightness = setMaxLum;
+  minLightness = setMinLightness;
+  maxLightness = setMaxLightness;
   lightness = minLightness;
   rgb = HslToRgb(hue, saturation, lightness);
 
-  // A loop is 50 * 18 + 360 steps... 
-  delayPerStep = int(setLoopTime * 1000.0 / 1260.0);
+// horizontal steps change hue. There are 360 horz steps
+// vertical steps change lightness. There are maxLight-minLight (45) full steps
+// vertical steps are repeated every waveWidth (20) degrees, so 360/waveWidth = 18
+// therefore vert steps = 45 * 18 = 810
+  loopSteps = 360 + ((maxLightness - minLightness) * 360 / waveWidth);
+  delayPerStep = int(setLoopTime * 1000.0 / loopSteps);
   state = 0;
 }
 
 Rgb SquarePattern::Update() {
   currentMillis = millis();
-  if ((currentMillis - previousMillis) >= delayPerStep) {
-    previousMillis = currentMillis;
-    if (state == 0) {
+  if ((state == 0) && ((currentMillis - previousMillis) >= (delayPerStep /5))) {
       // brightening lightness
-      lightness = lightness + 1;
-      if (lightness == maxLightness)
-        state = state + 1;
-        
-    } else if (state == 1) {
+      previousMillis = currentMillis;
+      lightness = lightness + 0.2;
+      if (lightness >= maxLightness) 
+        state = state + 1;        
+    } else if ((state == 1) && ((currentMillis - previousMillis) >= delayPerStep)) {
       // increasing hue at max lightness
+      previousMillis = currentMillis;
       hue = hue + 1;
-      if ((hue % 40) == 20)
+      if ((hue % (waveWidth * 2)) == waveWidth)
         state = state + 1;
         
-    } else if (state == 2) {
+    } else if ((state == 2) && ((currentMillis - previousMillis) >= (delayPerStep /5))) {
       // reducing lightness
-      lightness = lightness - 1;
-      if (lightness == minLightness)
+      previousMillis = currentMillis;
+      lightness = lightness - 0.2;
+      if (lightness <= minLightness)
         state = state + 1;
         
-    } else if (state == 3) {
+    } else if ((state == 3) && ((currentMillis - previousMillis) >= delayPerStep)) {
       // increasing hue at min lightness
+      previousMillis = currentMillis;
       hue = hue + 1;
-      if ((hue % 40) == 0)
+      if ((hue % (waveWidth * 2)) == 0)
         state = 0;
     }
   
     if (hue == 360)
       hue = 0;
     rgb = HslToRgb(hue, saturation, lightness);
-  }
   
 //  #ifdef DEBUG_LOG
 //    Serial.print(F("State: "));

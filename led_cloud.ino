@@ -15,15 +15,15 @@
 struct Rgb rgb;
 long startMillis;
 byte state = 0;
-const byte maxState = 2;
+const byte maxState = 3;
 
 // AdaFruit Trinket requires pins 4, 1, 0
 const byte RED_PIN = 4;
 const byte GREEN_PIN = 1;
 const byte BLUE_PIN = 0;
 
-RainbowPattern rainbowP(10); // loop time
-SquarePattern squareP(60, 25, 65); // loop time, min lightness, max lightness
+RainbowPattern rainbowP(60); // loop time
+SquarePattern squareP(120, 15, 60); // loop time, min lightness, max lightness
 
 void setup() {
   int i;
@@ -56,26 +56,29 @@ void loop() {
     case 0:
       rgb = rainbowP.Update();
       SetLedColor(rgb.red, rgb.green, rgb.blue);
-      state = CheckState(state, 10);
+      state = CheckState(state, maxState, 30);
       break;
     case 1:
-      rgb = squareP.Update();
-      SetLedColor(rgb.red, rgb.green, rgb.blue);
-      state = CheckState(state, 60);
+      SetLedColor(0, 0, 0);
+      state = CheckState(state, maxState, 3);
       break;
     case 2:
+      rgb = squareP.Update();
+      SetLedColor(rgb.red, rgb.green, rgb.blue);
+      state = CheckState(state, maxState, 60);
+      break;
+    case 3:
       SetLedColor(0, 0, 0);
-      state = CheckState(state, 3);
+      state = CheckState(state, maxState, 3);
       break;
   }
 }
 
-byte CheckState (byte state, long timeInState) {
+byte CheckState (byte state, byte maxState, long timeInState) {
   // state is current state
   // timeInState is seconds until state transition
   long currentMillis;
   currentMillis = millis();
-//  Serial.print(state);
   if ((currentMillis - startMillis) > (timeInState * 1000)) {
     #ifdef DEBUG_LOG
       Serial.println();
@@ -83,8 +86,8 @@ byte CheckState (byte state, long timeInState) {
       Serial.print(state);
       Serial.print(F(", "));
       Serial.print(currentMillis);
-      Serial.print(F(", "));
-      Serial.print(startMillis);
+//      Serial.print(F(", "));
+//      Serial.print(startMillis);
       Serial.println();
     #endif
     startMillis = currentMillis;

@@ -18,9 +18,11 @@ class SquarePattern
     struct Rgb rgb;
     int hue;
     byte saturation;
-    byte maxLightness;
     byte minLightness;
-    byte lightness;
+    byte maxLightness;
+    float lightness;
+    const int waveWidth = 20;
+    int loopSteps;
     
     byte state;
     long previousMillis;
@@ -28,7 +30,7 @@ class SquarePattern
     int delayPerStep;
 
   public:
-    SquarePattern(int setLoopTime, int setMaxLum, int setMinLum);
+    SquarePattern(int setLoopTime, int setMinLightness, int setMaxLightness);
     Rgb Update();
 };
 

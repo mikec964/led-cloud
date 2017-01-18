@@ -1,4 +1,4 @@
-struct Rgb HslToRgb(int hue, byte saturation, byte lightness)
+struct Rgb HslToRgb(int hue, byte saturation, float lightness)
 {
   /* Hue 0–359, Lightness 0-100, Saturation 0-100, returns RGB tuple
    * 
