@@ -1,10 +1,10 @@
-struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
+struct Rgb HslToRgb(int hue, byte saturation, byte lightness)
 {
-  /* Hue 0–359, Luminance 0-100, Saturation 0-100, returns RGB tuple
+  /* Hue 0–359, Lightness 0-100, Saturation 0-100, returns RGB tuple
    * 
-   * Usually use saturation 100, luminance 50
+   * Usually use saturation 100, lightness 50
    * 
-   * As luminance shifts (by 1), RGB colors shift by about 5 or 6.
+   * As lightness shifts (by 1), RGB colors shift by about 5 or 6.
    * This makes increasing brightness look bumpy.
    */
 
@@ -17,11 +17,11 @@ struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
 //    Serial.print(F(", "));
 //    Serial.print(saturation);
 //    Serial.print(F(", "));
-//    Serial.print(luminance);
+//    Serial.print(lightness);
 //    Serial.print(F(". "));
 //  #endif
 
-  // Calc based on luminance = 50
+  // Calc based on lightness = 50
   if(hue < 60) {
     red = 255; blue = 0; // count green
     green = int(255 * hue / 60);
@@ -42,9 +42,9 @@ struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
     blue = 255 - int(255 * (hue - 300) / 60);
   }
 
-  red = AdjustLuminance(red, luminance);
-  green = AdjustLuminance(green, luminance);
-  blue = AdjustLuminance(blue, luminance);
+  red = adjustLightness(red, lightness);
+  green = adjustLightness(green, lightness);
+  blue = adjustLightness(blue, lightness);
 
   rgb.red = AdjustSaturation(red, saturation);
   rgb.green = AdjustSaturation(green, saturation);
@@ -53,19 +53,19 @@ struct Rgb HslToRgb(int hue, byte saturation, byte luminance)
   return rgb;
 }
 
-int AdjustLuminance (int color, byte luminance) {
-  /* color = 0-255, luminance = 0-100
+int adjustLightness (int color, byte lightness) {
+  /* color = 0-255, lightness = 0-100
    *  
-   * If luminance is 50, leave color alone.
-   * If luminance > 50, adjust color toward 255.
-   * If luminance < 50, adjust color toward 0.
+   * If lightness is 50, leave color alone.
+   * If lightness > 50, adjust color toward 255.
+   * If lightness < 50, adjust color toward 0.
    */
 
   float factor, dist, adjust;
 
-  // If luminance > 50, blend RGB to white (255)
-  factor = (luminance - 50.0) / 50.0; // What % should we go? (positive means up)
-  if (luminance > 50)
+  // If lightness > 50, blend RGB to white (255)
+  factor = (lightness - 50.0) / 50.0; // What % should we go? (positive means up)
+  if (lightness > 50)
     dist = 255 - color; // Blend toward white?
   else
     dist = color; // How far from 0?

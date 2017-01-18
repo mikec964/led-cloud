@@ -3,7 +3,7 @@
 ## Software
 * triangle, and sine patterns
 * saturation calc
-* smooth luminance calc
+* smooth lightness calc
 
 ## Hardware
 * debug LED matches strip color

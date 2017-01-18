@@ -23,7 +23,7 @@ const byte GREEN_PIN = 1;
 const byte BLUE_PIN = 0;
 
 RainbowPattern rainbowP(10); // loop time
-SquarePattern squareP(60, 25, 65); // loop time, min luminance, max luminance
+SquarePattern squareP(60, 25, 65); // loop time, min lightness, max lightness
 
 void setup() {
   int i;

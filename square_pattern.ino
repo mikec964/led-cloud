@@ -2,17 +2,17 @@
 
 SquarePattern::SquarePattern(int setLoopTime, int setMinLum, int setMaxLum) {
   /* Concerns:
-   * what if starting luminance > maxLum??
-   * Luminance increments by 1, but this causes RGB to increment by 4... jaggy.
+   * what if starting lightness > maxLightness??
+   * Lightness increments by 1, but this causes RGB to increment by 4... jaggy.
    */
 
   // Constructor
   hue = 300;
   saturation = 100;
-  minLuminance = setMinLum;
-  maxLuminance = setMaxLum;
-  luminance = minLuminance;
-  rgb = HslToRgb(hue, saturation, luminance);
+  minLightness = setMinLum;
+  maxLightness = setMaxLum;
+  lightness = minLightness;
+  rgb = HslToRgb(hue, saturation, lightness);
 
   // A loop is 50 * 18 + 360 steps... 
   delayPerStep = int(setLoopTime * 1000.0 / 1260.0);
@@ -24,25 +24,25 @@ Rgb SquarePattern::Update() {
   if ((currentMillis - previousMillis) >= delayPerStep) {
     previousMillis = currentMillis;
     if (state == 0) {
-      // brightening lum
-      luminance = luminance + 1;
-      if (luminance == maxLuminance)
+      // brightening lightness
+      lightness = lightness + 1;
+      if (lightness == maxLightness)
         state = state + 1;
         
     } else if (state == 1) {
-      // increasing hue at max lum
+      // increasing hue at max lightness
       hue = hue + 1;
       if ((hue % 40) == 20)
         state = state + 1;
         
     } else if (state == 2) {
-      // reducing lum
-      luminance = luminance - 1;
-      if (luminance == minLuminance)
+      // reducing lightness
+      lightness = lightness - 1;
+      if (lightness == minLightness)
         state = state + 1;
         
     } else if (state == 3) {
-      // increasing hue at min lum
+      // increasing hue at min lightness
       hue = hue + 1;
       if ((hue % 40) == 0)
         state = 0;
@@ -50,7 +50,7 @@ Rgb SquarePattern::Update() {
   
     if (hue == 360)
       hue = 0;
-    rgb = HslToRgb(hue, saturation, luminance);
+    rgb = HslToRgb(hue, saturation, lightness);
   }
   
 //  #ifdef DEBUG_LOG
@@ -61,7 +61,7 @@ Rgb SquarePattern::Update() {
 //    Serial.print(F(", "));
 //    Serial.print(saturation);
 //    Serial.print(F(", "));
-//    Serial.print(luminance);
+//    Serial.print(lightness);
 //    Serial.print(F(". "));
 //  #endif
 

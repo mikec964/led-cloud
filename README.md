@@ -15,9 +15,9 @@ For a controller I started with an Arduino Uno for prototyping and debugging, an
 * The Trinket's small form factor, voltage regulation, and cost made it ideal for embedding. With no effort, I could drive it with the same 12V power supply used to power the LEDs.
 
 ## Unique Aspects
-* I wrote an HSL (hue, saturation, luminance) to RGB converter. This helps:
+* I wrote an HSL (hue, saturation, lightness) to RGB converter. This helps:
     * Color selection. Blue is hue=240, red is hue=360, and purple is hue = 300.
-    * Lighten or darken colors. Just change luminance.
+    * Lighten or darken colors. Just change lightness.
     * Rainbows. Just increment hue from 0 to 359.
 
 * The patterns are separate objects and files, easy to add or remove.
