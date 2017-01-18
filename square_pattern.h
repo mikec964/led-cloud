@@ -3,6 +3,17 @@
 
 class SquarePattern
 {
+  /* Returns RGB values around the color wheel while varying luminance
+   *  
+   *  setLoopTime is (roughly) seconds to go around the color wheel
+   *  Call Update() repeatedly; colors change as time passes
+   *  
+   *  Go from dim to bright,
+   *  change hue,
+   *  go from bright to dim
+   *  change hue.
+   */
+
   private:
     struct Rgb rgb;
     int hue;
@@ -10,8 +21,11 @@ class SquarePattern
     byte maxLuminance;
     byte minLuminance;
     byte luminance;
-    int loopTime;
+    
     byte state;
+    long previousMillis;
+    long currentMillis;
+    int delayPerStep;
 
   public:
     SquarePattern(int setLoopTime, int setMaxLum, int setMinLum);
@@ -19,3 +33,4 @@ class SquarePattern
 };
 
 #endif
+
