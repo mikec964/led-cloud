@@ -1,7 +1,6 @@
 # To Do
 
 ## Software
-* No delay() calls
 * triangle, and sine patterns
 * saturation calc
 * smooth luminance calc
