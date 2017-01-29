@@ -22,3 +22,5 @@ For a controller I started with an Arduino Uno for prototyping and debugging, an
 
 * The patterns are separate objects and files, easy to add or remove.
 
+* Patterns use millis() timers instead of delay(), so they support multitasking and responsiveness to controls.
+
