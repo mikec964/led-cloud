@@ -5,9 +5,6 @@
 //#define COMMON_ANODE  // Test LED IS common_anode, LED strip is NOT common_anode
 //#define DEBUG_LOG
 
-// For Trinket, program with USBtinyISP
-// For Arduino, program with AVR ISP
-
 #include "hsl.h"
 #include "square_pattern.h"
 #include "rainbow_pattern.h"
@@ -17,10 +14,13 @@ long startMillis;
 byte state = 0;
 const byte maxState = 3;
 
-// AdaFruit Trinket requires pins 4, 1, 0
-const byte RED_PIN = 4;
-const byte GREEN_PIN = 1;
-const byte BLUE_PIN = 0;
+#if defined(IS_BEAN)
+#else
+  // AdaFruit Trinket requires pins 4, 1, 0
+  const byte RED_PIN = 4; 
+  const byte GREEN_PIN = 1;
+  const byte BLUE_PIN = 0;
+#endif
 
 RainbowPattern rainbowP(60); // loop time
 SquarePattern squareP(120, 15, 60); // loop time, min lightness, max lightness
@@ -34,9 +34,12 @@ void setup() {
     Serial.println(F("-----"));
   #endif
 
-  pinMode(RED_PIN, OUTPUT);
-  pinMode(GREEN_PIN, OUTPUT);
-  pinMode(BLUE_PIN, OUTPUT);
+  #if defined(IS_BEAN)
+  #else
+    pinMode(RED_PIN, OUTPUT);
+    pinMode(GREEN_PIN, OUTPUT);
+    pinMode(BLUE_PIN, OUTPUT);
+  #endif
 
   // quick connectivity test
   SetLedColor(0, 0, 0);
@@ -112,8 +115,13 @@ void SetLedColor(int red, int green, int blue)
     green = 255 - green;
     blue = 255 - blue;
   #endif
-  analogWrite(RED_PIN, red);
-  analogWrite(GREEN_PIN, green);
-  analogWrite(BLUE_PIN, blue);  
+  
+  #if defined(IS_BEAN)
+    Bean.setLed(red, green, blue);
+  #else
+    analogWrite(RED_PIN, red);
+    analogWrite(GREEN_PIN, green);
+    analogWrite(BLUE_PIN, blue);
+  #endif
 }
 
