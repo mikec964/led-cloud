@@ -63,19 +63,22 @@ void loop() {
       SetLedColor(rgb.red, rgb.green, rgb.blue);
       state = CheckState(state, maxState, 30);
       break;
+
     case 1:
       SetLedColor(128, 0, 0);
       state = CheckState(state, maxState, 3);
       break;
+
     case 2:
 //      rgb = squareP.Update();
-      rgb = TrianlgeP.Update();
-      SetLedColor(rgb.red, rgb.green, rgb.blue);
-      state = CheckState(state, maxState, 60);
+      rgb = triangleP.Update();
+      state = CheckState(state, maxState, 2);
       break;
+
     case 3:
+      // Signal end of pattern
       SetLedColor(0, 128, 0);
-      state = CheckState(state, maxState, 3);
+      state = CheckState(state, maxState, 2);
       break;
   }
 }
