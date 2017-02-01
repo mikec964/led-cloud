@@ -2,12 +2,13 @@
  *  Controls an RGB LED strip; LEDs are not individually addressable
  */
 
-//#define COMMON_ANODE  // Test LED IS common_anode, LED strip is NOT common_anode
+//#define COMMON_ANODE
 //#define DEBUG_LOG
 
 #include "hsl.h"
 #include "square_pattern.h"
 #include "rainbow_pattern.h"
+#include "triangle_pattern.h"
 
 struct Rgb rgb;
 long startMillis;
@@ -24,6 +25,7 @@ const byte maxState = 3;
 
 RainbowPattern rainbowP(60); // loop time
 SquarePattern squareP(120, 15, 60); // loop time, min lightness, max lightness
+TrianglePattern triangleP(120, 15, 60); // loop time, min lightness, max lightness
 
 void setup() {
   int i;
@@ -62,16 +64,17 @@ void loop() {
       state = CheckState(state, maxState, 30);
       break;
     case 1:
-      SetLedColor(0, 0, 0);
+      SetLedColor(128, 0, 0);
       state = CheckState(state, maxState, 3);
       break;
     case 2:
-      rgb = squareP.Update();
+//      rgb = squareP.Update();
+      rgb = TrianlgeP.Update();
       SetLedColor(rgb.red, rgb.green, rgb.blue);
       state = CheckState(state, maxState, 60);
       break;
     case 3:
-      SetLedColor(0, 0, 0);
+      SetLedColor(0, 128, 0);
       state = CheckState(state, maxState, 3);
       break;
   }
