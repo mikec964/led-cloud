@@ -36,13 +36,6 @@ void setup() {
     Serial.println(F("-----"));
   #endif
 
-  #if defined(IS_BEAN)
-  #else
-    pinMode(RED_PIN, OUTPUT);
-    pinMode(GREEN_PIN, OUTPUT);
-    pinMode(BLUE_PIN, OUTPUT);
-  #endif
-
   // quick connectivity test
   SetLedColor(0, 0, 0);
   for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
