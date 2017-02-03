@@ -11,3 +11,4 @@
 ## Other
 * characterize code size
 * method to change modes
+* sound reactive

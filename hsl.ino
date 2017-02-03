@@ -95,3 +95,16 @@ int AdjustSaturation (int color, byte saturation) {
    return color;
 }
 
+#ifdef DEBUG_LOG
+void printHsl (int h, int s, int l, bool eol) {
+      Serial.print(F("HSL "));
+      Serial.print(h);
+      Serial.print(F(", "));
+      Serial.print(s);
+      Serial.print(F(", "));
+      Serial.print(l);
+      Serial.print(F(" "));
+      if (eol) { Serial.println(); }
+}
+#endif
+

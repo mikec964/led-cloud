@@ -3,17 +3,20 @@
  */
 
 //#define COMMON_ANODE
-//#define DEBUG_LOG
+#define DEBUG_LOG
 
 #include "hsl.h"
 #include "square_pattern.h"
 #include "rainbow_pattern.h"
 #include "triangle_pattern.h"
+#include "transition_pattern.h"
 
 struct Rgb rgb;
+struct Hsl startColorHsl = {270, 50, 40}; // rebeccaPurple
+struct Hsl endColorHsl = {120, 100, 50}; // lime
 long startMillis;
 byte state = 0;
-const byte maxState = 3;
+const byte maxState = 1;
 
 #if defined(IS_BEAN)
 #else
@@ -27,6 +30,8 @@ RainbowPattern rainbowP(60); // loop time
 SquarePattern squareP(120, 15, 60); // loop time, min lightness, max lightness
 TrianglePattern triangleP(120, 15, 60); // loop time, min lightness, max lightness
 
+TransitionPattern transitionP(5, startColorHsl, endColorHsl);
+
 void setup() {
   int i;
   
@@ -36,22 +41,15 @@ void setup() {
     Serial.println(F("-----"));
   #endif
 
-  #if defined(IS_BEAN)
-  #else
-    pinMode(RED_PIN, OUTPUT);
-    pinMode(GREEN_PIN, OUTPUT);
-    pinMode(BLUE_PIN, OUTPUT);
-  #endif
-
   // quick connectivity test
-  SetLedColor(0, 0, 0);
-  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
-  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
-  SetLedColor(128, 128, 128);
-  delay(500);
-  SetLedColor(0, 0, 0);
-  delay(500);
+//  SetLedColor(0, 0, 0);
+//  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
+//  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
+//  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
+//  SetLedColor(128, 128, 128);
+//  delay(500);
+//  SetLedColor(0, 0, 0);
+//  delay(500);
 
   startMillis = millis();
 }
@@ -59,7 +57,8 @@ void setup() {
 void loop() {
   switch (state) {
     case 0:
-      rgb = rainbowP.Update();
+//      rgb = rainbowP.Update();
+      rgb = transitionP.Update();
       SetLedColor(rgb.red, rgb.green, rgb.blue);
       state = CheckState(state, maxState, 30);
       break;
