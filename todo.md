@@ -3,7 +3,6 @@
 ## Software
 * sine pattern
 * saturation calc
-* transition (from a color to another) pattern
 
 ## Hardware
 * programmable without removing Trinket

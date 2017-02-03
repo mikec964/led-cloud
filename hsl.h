@@ -8,9 +8,9 @@ struct Rgb {
 };
 
 struct Hsl {
-    int hue;
-    byte saturation;
-    float lightness;
+  int hue;
+  byte saturation;
+  float lightness;
 };
 
 #endif

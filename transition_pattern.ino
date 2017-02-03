@@ -25,10 +25,12 @@ TransitionPattern::TransitionPattern(int setLoopTime, Hsl startColor, Hsl endCol
 }
 
 Rgb TransitionPattern::Update() {
-  if ((hue == endHue) and (saturation == endSaturation) and (abs(lightness - endLightness) < 1)) { return rgb; }
-//  #ifdef DEBUG_LOG
-//    printHsl(hue, saturation, lightness, true);
-//  #endif
+  if ((hue == endHue) and (saturation == endSaturation) and (abs(lightness - endLightness) < 1)) { 
+    return rgb;
+    #ifdef DEBUG_LOG
+      printHsl(hue, saturation, lightness, true);
+    #endif
+  }
 
   currentMillis = millis();
   if ((hue != endHue) and ((currentMillis - huePreviousMillis) >= hueDelay)) {

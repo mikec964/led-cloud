@@ -12,13 +12,7 @@ struct Rgb HslToRgb(int hue, byte saturation, float lightness)
   byte red, green, blue;
 
 //  #ifdef DEBUG_LOG
-//    Serial.print(F("HSL "));
-//    Serial.print(hue);
-//    Serial.print(F(", "));
-//    Serial.print(saturation);
-//    Serial.print(F(", "));
-//    Serial.print(lightness);
-//    Serial.print(F(". "));
+//    printHsl(hue, saturation, lightness, false);
 //  #endif
 
   // Calc based on lightness = 50
@@ -105,6 +99,17 @@ void printHsl (int h, int s, int l, bool eol) {
       Serial.print(l);
       Serial.print(F(" "));
       if (eol) { Serial.println(); }
+}
+
+void printRgb (int r, int g, int b, bool eol) {
+  Serial.print(F("RGB "));
+  Serial.print(r);
+  Serial.print(F(", "));
+  Serial.print(g);
+  Serial.print(F(", "));
+  Serial.print(b);
+  Serial.print(F(" "));
+  if (eol) { Serial.println(); }
 }
 #endif
 

@@ -5,6 +5,14 @@
 //#define COMMON_ANODE
 #define DEBUG_LOG
 
+#if defined(IS_BEAN)
+#else
+  // AdaFruit Trinket requires pins 4, 1, 0
+  const byte RED_PIN = 4; 
+  const byte GREEN_PIN = 1;
+  const byte BLUE_PIN = 0;
+#endif
+
 #include "hsl.h"
 #include "square_pattern.h"
 #include "rainbow_pattern.h"
@@ -18,23 +26,12 @@ long startMillis;
 byte state = 0;
 const byte maxState = 1;
 
-#if defined(IS_BEAN)
-#else
-  // AdaFruit Trinket requires pins 4, 1, 0
-  const byte RED_PIN = 4; 
-  const byte GREEN_PIN = 1;
-  const byte BLUE_PIN = 0;
-#endif
-
 RainbowPattern rainbowP(60); // loop time
 SquarePattern squareP(120, 15, 60); // loop time, min lightness, max lightness
 TrianglePattern triangleP(120, 15, 60); // loop time, min lightness, max lightness
-
 TransitionPattern transitionP(5, startColorHsl, endColorHsl);
 
 void setup() {
-  int i;
-  
   #ifdef DEBUG_LOG
     Serial.begin(19200);
     Serial.println();
@@ -42,14 +39,14 @@ void setup() {
   #endif
 
   // quick connectivity test
-//  SetLedColor(0, 0, 0);
-//  for(i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
-//  for(i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
-//  for(i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
-//  SetLedColor(128, 128, 128);
-//  delay(500);
-//  SetLedColor(0, 0, 0);
-//  delay(500);
+  SetLedColor(0, 0, 0);
+  for(byte i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
+  for(byte i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
+  for(byte i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
+  SetLedColor(128, 128, 128);
+  delay(500);
+  SetLedColor(0, 0, 0);
+  delay(500);
 
   startMillis = millis();
 }
@@ -60,7 +57,7 @@ void loop() {
 //      rgb = rainbowP.Update();
       rgb = transitionP.Update();
       SetLedColor(rgb.red, rgb.green, rgb.blue);
-      state = CheckState(state, maxState, 30);
+      state = CheckState(state, maxState, 20);
       break;
 
     case 1:
@@ -71,7 +68,8 @@ void loop() {
     case 2:
 //      rgb = squareP.Update();
       rgb = triangleP.Update();
-      state = CheckState(state, maxState, 2);
+      SetLedColor(rgb.red, rgb.green, rgb.blue);
+      state = CheckState(state, maxState, 20);
       break;
 
     case 3:
@@ -94,8 +92,6 @@ byte CheckState (byte state, byte maxState, long timeInState) {
       Serial.print(state);
       Serial.print(F(", "));
       Serial.print(currentMillis);
-//      Serial.print(F(", "));
-//      Serial.print(startMillis);
       Serial.println();
     #endif
     startMillis = currentMillis;
@@ -104,17 +100,7 @@ byte CheckState (byte state, byte maxState, long timeInState) {
   return state;
 }
 
-void SetLedColor(int red, int green, int blue)
-{
-//  #ifdef DEBUG_LOG
-//    Serial.print("RGB: ");
-//    Serial.print(red);
-//    Serial.print(", ");
-//    Serial.print(green);
-//    Serial.print(", ");
-//    Serial.print(blue);
-//    Serial.println(". ");
-//  #endif
+void SetLedColor(byte red, byte green, byte blue) {
   #ifdef COMMON_ANODE
     red = 255 - red;
     green = 255 - green;
@@ -122,7 +108,7 @@ void SetLedColor(int red, int green, int blue)
   #endif
   
   #if defined(IS_BEAN)
-    Bean.setLed(red, green, blue);
+    Bean.setLed(red, green, blue); // use onboard LED
   #else
     analogWrite(RED_PIN, red);
     analogWrite(GREEN_PIN, green);
