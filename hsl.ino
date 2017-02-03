@@ -101,7 +101,7 @@ void printHsl (int h, int s, int l, bool eol) {
       if (eol) { Serial.println(); }
 }
 
-void printRgb (int r, int g, int b, bool eol) {
+void printRgb (byte r, byte g, byte b, bool eol) {
   Serial.print(F("RGB "));
   Serial.print(r);
   Serial.print(F(", "));

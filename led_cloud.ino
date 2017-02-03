@@ -39,10 +39,10 @@ void setup() {
   #endif
 
   // quick connectivity test
-  SetLedColor(0, 0, 0);
-  for(byte i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
-  for(byte i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
-  for(byte i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
+  SetLedColor(64, 64, 64);
+  for(int i=0; i <= 255; i++) { SetLedColor(i, 0, 0); delay(12); }
+  for(int i=0; i <= 255; i++) { SetLedColor(0, i, 0); delay(12); }
+  for(int i=0; i <= 255; i++) { SetLedColor(0, 0, i); delay(12); }
   SetLedColor(128, 128, 128);
   delay(500);
   SetLedColor(0, 0, 0);
@@ -88,7 +88,7 @@ byte CheckState (byte state, byte maxState, long timeInState) {
   if ((currentMillis - startMillis) > (timeInState * 1000)) {
     #ifdef DEBUG_LOG
       Serial.println();
-      Serial.print(F("State, cm, sm: "));
+      Serial.print(F("State, ms: "));
       Serial.print(state);
       Serial.print(F(", "));
       Serial.print(currentMillis);
@@ -106,7 +106,9 @@ void SetLedColor(byte red, byte green, byte blue) {
     green = 255 - green;
     blue = 255 - blue;
   #endif
-  
+//  #ifdef DEBUG_LOG
+//    printRgb(red, green, blue, true);
+//  #endif
   #if defined(IS_BEAN)
     Bean.setLed(red, green, blue); // use onboard LED
   #else
