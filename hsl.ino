@@ -47,7 +47,7 @@ struct Rgb HslToRgb(int hue, byte saturation, float lightness)
   return rgb;
 }
 
-int adjustLightness (int color, byte lightness) {
+byte adjustLightness (int color, byte lightness) {
   /* color = 0-255, lightness = 0-100
    *  
    * If lightness is 50, leave color alone.
@@ -79,26 +79,28 @@ int adjustLightness (int color, byte lightness) {
   return color;
 }
 
-int AdjustSaturation (int color, byte saturation) {
+byte AdjustSaturation (byte color, byte saturation) {
   /* color = 0-255, saturation= 0-100
    *  
    * If saturation is 100, leave color alone.
    * As saturation approaches 0, adjust color to 128.
    */
 
-   return color;
+  // 128-color is the distance, 100-sat/100 is the factor
+  color += (128 - color) * (100 - saturation) / 100;
+  return color;
 }
 
 #ifdef DEBUG_LOG
 void printHsl (int h, int s, int l, bool eol) {
-      Serial.print(F("HSL "));
-      Serial.print(h);
-      Serial.print(F(", "));
-      Serial.print(s);
-      Serial.print(F(", "));
-      Serial.print(l);
-      Serial.print(F(" "));
-      if (eol) { Serial.println(); }
+  Serial.print(F("HSL "));
+  Serial.print(h);
+  Serial.print(F(", "));
+  Serial.print(s);
+  Serial.print(F(", "));
+  Serial.print(l);
+  Serial.print(F(" "));
+  if (eol) { Serial.println(); }
 }
 
 void printRgb (byte r, byte g, byte b, bool eol) {

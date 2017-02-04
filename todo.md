@@ -2,7 +2,6 @@
 
 ## Software
 * sine pattern
-* saturation calc
 
 ## Hardware
 * programmable without removing Trinket
