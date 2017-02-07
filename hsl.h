@@ -9,7 +9,7 @@ struct Rgb {
 
 struct Hsl {
   int hue;
-  byte saturation;
+  float saturation;
   float lightness;
 };
 

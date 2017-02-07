@@ -1,6 +1,5 @@
-struct Rgb HslToRgb(int hue, byte saturation, float lightness)
-{
-  /* Hue 0–359, Lightness 0-100, Saturation 0-100, returns RGB tuple
+struct Rgb HslToRgb(float hue, float saturation, float lightness) {
+  /* Hue 0–360, Lightness 0-100, Saturation 0-100, returns RGB tuple
    * 
    * Usually use saturation 100, lightness 50
    * 
@@ -8,87 +7,47 @@ struct Rgb HslToRgb(int hue, byte saturation, float lightness)
    * This makes increasing brightness look bumpy.
    */
 
-  struct Rgb rgb;
-  byte red, green, blue;
+  float r, g, b;
+  float q, p;
+  float hue2, sat2, light2;
+  Rgb rgb;
+  Hsl hsl;
 
-//  #ifdef DEBUG_LOG
-//    printHsl(hue, saturation, lightness, false);
-//  #endif
-
-  // Calc based on lightness = 50
-  if(hue < 60) {
-    red = 255; blue = 0; // count green
-    green = int(255 * hue / 60);
-  } else if (hue < 120) {
-    green = 255; blue = 0; // countdown red
-    red = 255 - int(255 * (hue - 60) / 60);
-  } else if (hue < 180) {
-    red = 0; green = 255; // count blue
-    blue = int(255 * (hue - 120) / 60);
-  } else if (hue < 240) {
-    red = 0; blue = 255; // countdown green
-    green = 255 - int(255 * (hue - 180) / 60);
-  } else if (hue < 300) {
-    green = 0; blue = 255; // count red
-    red = int(255 * (hue - 240) / 60);
+  hue2 = hue / 360.0f;
+  sat2 = saturation / 100.0f;
+  light2 = lightness / 100.0f;
+  Serial.print("...");
+  Serial.print(hsl.hue);
+  Serial.print(",");
+  Serial.print(sat2);
+  Serial.print(",");
+  Serial.print(light2);
+  Serial.print("...");
+  
+  if (sat2 == 0.0f) {
+      r = g = b = light2;
   } else {
-    red = 255; green = 0; // countdown blue
-    blue = 255 - int(255 * (hue - 300) / 60);
+      q = light2 < 0.5f ? light2 * (1.0f + sat2) : light2 + sat2 - light2 * sat2;
+      p = 2.0f * light2 - q;
+      r = HueToRgb(p, q, hue2 + 1.0f / 3.0f);
+      g = HueToRgb(p, q, hue2);
+      b = HueToRgb(p, q, hue2 - 1.0f / 3.0f);
   }
 
-  red = adjustLightness(red, lightness);
-  green = adjustLightness(green, lightness);
-  blue = adjustLightness(blue, lightness);
-
-  rgb.red = AdjustSaturation(red, saturation);
-  rgb.green = AdjustSaturation(green, saturation);
-  rgb.blue = AdjustSaturation(blue, saturation);
- 
+//  return Rgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
+  rgb.red = (int)(r * 255);
+  rgb.green = (int)(g * 255);
+  rgb.blue = (int)(b * 255);
   return rgb;
 }
 
-byte adjustLightness (int color, byte lightness) {
-  /* color = 0-255, lightness = 0-100
-   *  
-   * If lightness is 50, leave color alone.
-   * If lightness > 50, adjust color toward 255.
-   * If lightness < 50, adjust color toward 0.
-   */
-
-  float factor, dist, adjust;
-
-  // If lightness > 50, blend RGB to white (255)
-  factor = (lightness - 50.0) / 50.0; // What % should we go? (positive means up)
-  if (lightness > 50)
-    dist = 255 - color; // Blend toward white?
-  else
-    dist = color; // How far from 0?
-  adjust = dist * factor; // scale dist by factor
-
-//  #ifdef DEBUG_LOG
-//    Serial.print(F("factor, dist, adjust: "));
-//    Serial.print(factor);
-//    Serial.print(F(", "));
-//    Serial.print(dist);
-//    Serial.print(F(", "));
-//    Serial.print(adjust);
-//    Serial.print(F(". "));
-//  #endif
-  
-  color = color + adjust;
-  return color;
-}
-
-byte AdjustSaturation (byte color, byte saturation) {
-  /* color = 0-255, saturation= 0-100
-   *  
-   * If saturation is 100, leave color alone.
-   * As saturation approaches 0, adjust color to 128.
-   */
-
-  // 128-color is the distance, 100-sat/100 is the factor
-  color += (128 - color) * (100 - saturation) / 100;
-  return color;
+static float HueToRgb(float p, float q, float t) {
+    if (t < 0.0f) t += 1.0f;
+    if (t > 1.0f) t -= 1.0f;
+    if (t < 1.0f / 6.0f) return p + (q - p) * 6.0f * t;
+    if (t < 1.0f / 2.0f) return q;
+    if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
+    return p;
 }
 
 #ifdef DEBUG_LOG
