@@ -13,6 +13,8 @@ struct Hsl {
   float lightness;
 };
 
+struct Rgb HslToRgb(float hue, float saturation, float lightness); //prototype
+
 #endif
 
 // From http://hslpicker.com
