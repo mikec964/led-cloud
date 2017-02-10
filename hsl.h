@@ -1,5 +1,5 @@
-#ifndef HSL_H
-#define HSL_H
+#ifndef HSL_H_
+#define HSL_H_
 
 struct Rgb {
   byte red;
@@ -13,7 +13,12 @@ struct Hsl {
   float lightness;
 };
 
-struct Rgb HslToRgb(float hue, float saturation, float lightness); //prototype
+struct Rgb HslToRgb(int hue, float saturation, float lightness); //prototype
+  /* Hue 0–359, Saturation 0-100, Lightness 0-100, returns RGB tuple
+   * 
+   * As lightness shifts (by 1), RGB colors shift by about 5 or 6.
+   * This makes increasing brightness look bumpy.
+   */
 
 #endif
 
